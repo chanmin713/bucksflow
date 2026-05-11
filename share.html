@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BucksFlow 공유하기</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f13;color:#e0e0e0;padding:20px}
+.container{max-width:700px;margin:0 auto}
+h1{font-size:1.5rem;margin-bottom:8px}
+.sub{color:#888;margin-bottom:24px}
+.card{background:#1a1a24;border-radius:14px;padding:20px;margin-bottom:16px;border:1px solid #2a2a3a}
+.card h3{font-size:1rem;margin-bottom:4px}
+.card .platform{color:#6c5ce7;font-size:0.8rem;margin-bottom:10px}
+.template{background:#0f0f13;border:1px solid #2a2a3a;border-radius:10px;padding:14px;font-size:0.9rem;white-space:pre-wrap;line-height:1.6;margin-bottom:10px;color:#ccc}
+.copy-btn{background:#6c5ce7;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600}
+.copy-btn:hover{background:#5a4bd1}
+.copied{color:#00b894;margin-left:8px;font-size:0.8rem}
+h2{font-size:1.2rem;margin:28px 0 12px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>📢 BucksFlow 공유 템플릿</h1>
+<p class="sub">복사해서 커뮤니티에 붙여넣기만 하세요!</p>
+
+<h2>🇰🇷 한국 커뮤니티</h2>
+
+<div class="card">
+<h3>디시인사이드 프로그래밍 갤러리</h3>
+<div class="platform">dcinside.com</div>
+<div class="template" id="dc">무료 가계부 웹앱 만들었습니다
+
+💰 기능
+• 수입/지출 기록 & 차트 시각화
+• 카테고리별 통계
+• localStorage 저장 (회원가입 없음)
+• 다크모드 UI
+
+🔗 https://chanmin713.github.io/bucksflow/
+
+써보시고 괜찮으면 토스/카카오페이로 커피값 한잔 부탁드립니다 ☕</div>
+<button class="copy-btn" onclick="copy('dc')">📋 복사하기</button>
+<span class="copied" id="dc-ok"></span>
+</div>
+
+<div class="card">
+<h3>에펨코리아 자유게시판</h3>
+<div class="platform">fmkorea.com</div>
+<div class="template" id="fm">심심해서 가계부 사이트 하나 만들었는데 생각보다 잘 나왔네요
+
+• 순수 HTML/CSS/JS
+• 반응형 (모바일 지원)
+• 회원가입 없이 바로 사용
+• 링크: https://chanmin713.github.io/bucksflow/
+
+출시 기념으로 별 거 아니지만 QR 송금 기능도 달아놨어요 ㅋㅋ</div>
+<button class="copy-btn" onclick="copy('fm')">📋 복사하기</button>
+<span class="copied" id="fm-ok"></span>
+</div>
+
+<div class="card">
+<h3>네이버 카페 / 오픈채팅</h3>
+<div class="platform">cafe.naver.com / open.kakao.com</div>
+<div class="template" id="naver">💰 무료 가계부 BucksFlow 출시했어요!
+
+https://chanmin713.github.io/bucksflow/
+
+✨ 깔끔한 UI에 차트까지 있어서 써볼만해요
+📱 모바일도 잘 됩니다
+🔒 회원가입 없이 로컬 저장
+
+만드느라 고생했는데 커피 한잔 사주시면 감사합니다 ☕
+(페이지 하단에 토스/카카오페이/페이팔 있습니다!)</div>
+<button class="copy-btn" onclick="copy('naver')">📋 복사하기</button>
+<span class="copied" id="naver-ok"></span>
+</div>
+
+<h2>🌍 해외 커뮤니티</h2>
+
+<div class="card">
+<h3>Reddit r/SideProject / r/webdev</h3>
+<div class="platform">reddit.com</div>
+<div class="template" id="reddit">I built a free personal finance tracker - BucksFlow 💰
+
+Features:
+• No signup required (localStorage)
+• Dark mode UI
+• Income/expense tracking with charts
+• Category breakdown
+
+🔗 https://chanmin713.github.io/bucksflow/
+
+If you find it useful, tips are appreciated (PayPal link on the page).</div>
+<button class="copy-btn" onclick="copy('reddit')">📋 복사하기</button>
+<span class="copied" id="reddit-ok"></span>
+</div>
+
+<div class="card">
+<h3>Product Hunt Style</h3>
+<div class="platform">producthunt.com / Twitter</div>
+<div class="template" id="ph">🚀 Launching BucksFlow - a free, no-signup money tracker
+
+Built with vanilla HTML/CSS/JS. Tracks income/expenses, shows category charts, saves to localStorage. Dark mode, mobile-friendly, and completely free.
+
+Try it: https://chanmin713.github.io/bucksflow/
+
+If it helps you manage your money, consider buying me a coffee ☕</div>
+<button class="copy-btn" onclick="copy('ph')">📋 복사하기</button>
+<span class="copied" id="ph-ok"></span>
+</div>
+</div>
+
+<script>
+function copy(id) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent);
+  document.getElementById(id+'-ok').textContent = '✓ 복사 완료!';
+  setTimeout(()=>document.getElementById(id+'-ok').textContent='',2000);
+}
+</script>
+</body>
+</html>
