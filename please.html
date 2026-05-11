@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 $10만 주세요... 진짜 필요한데...</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f13;color:#e0e0e0;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.card{max-width:500px;background:#1a1a24;border-radius:20px;padding:40px 30px;border:2px solid #6c5ce7}
+.emoji{font-size:4rem;margin-bottom:16px}
+h1{font-size:1.6rem;margin-bottom:8px;line-height:1.4}
+h2{font-size:1.1rem;color:#6c5ce7;margin-bottom:20px}
+.reasons{text-align:left;margin:24px 0;font-size:0.9rem;line-height:1.8;color:#aaa}
+.reasons span{color:#00b894;font-weight:600}
+.progress-wrap{margin:24px 0}
+.progress-label{display:flex;justify-content:space-between;font-size:0.8rem;color:#888;margin-bottom:6px}
+.progress-bar{height:12px;background:#2a2a3a;border-radius:6px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#6c5ce7,#a29bfe);border-radius:6px;transition:width .5s ease}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:24px 0}
+.btns a{text-decoration:none;padding:14px 24px;border-radius:12px;font-weight:700;font-size:0.95rem;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btns a:hover{transform:translateY(-2px)}
+.btn-paypal{background:#0070ba;color:#fff}
+.btn-toss{background:#3182f6;color:#fff}
+.btn-kakao{background:#fee500;color:#191919}
+.counter{font-size:0.85rem;color:#888;margin-top:16px}
+#visitors{color:#6c5ce7;font-weight:700}
+.refresh{font-size:0.8rem;color:#666;margin-top:20px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="emoji">🥺</div>
+<h1>안녕하세요...<br>$10만 있으면 됩니다</h1>
+<h2>목표: <span id="goal">$10</span></h2>
+
+<div class="progress-wrap">
+  <div class="progress-label"><span>현재</span><span id="current">$0.00</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="bar" style="width:0%"></div></div>
+</div>
+
+<div class="reasons">
+<span>✓</span> 커피 한 잔 값 = 4,500원<br>
+<span>✓</span> 커피 두 잔 값 = $10<br>
+<span>✓</span> 당신의 커피 한 잔을 양보해주세요<br>
+<span>✓</span> 부탁드립니다 제발요<br>
+<span>✓</span> 진짜 마지막 부탁이에요<br>
+<span>✓</span> 농담이에요 (진짜임)
+</div>
+
+<div class="btns">
+<a href="https://www.paypal.com/paypalme/chanminkimkr" target="_blank" class="btn-paypal">💳 PayPal $10</a>
+<a href="https://qr.kakaopay.com/FIX2EsLv8" target="_blank" class="btn-kakao">💛 카카오페이</a>
+</div>
+
+<div style="margin-top:16px;background:white;border-radius:14px;padding:16px;display:inline-block">
+  <p style="color:#333;font-weight:700;font-size:0.85rem;margin-bottom:8px">🇰🇷 토스로 보내기</p>
+  <img src="IMG_1753.PNG" alt="Toss QR" style="width:160px;height:160px;border-radius:8px">
+</div>
+
+<p class="counter">👀 오늘 <span id="visitors">???</span>명이 이 페이지를 봤습니다</p>
+<p class="refresh" onclick="location.reload()">새로고침하면 숫자 올라감 ㅋㅋ</p>
+</div>
+
+<script>
+(function(){
+  const v=Math.floor(Math.random()*47)+13;
+  document.getElementById('visitors').textContent=v;
+  const pct=Math.min((v/100)*100,95);
+  document.getElementById('bar').style.width=pct+'%';
+  document.getElementById('current').textContent='$'+(v*0.08).toFixed(2);
+})();
+</script>
+</body>
+</html>
