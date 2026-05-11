@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BucksFlow - Smart Money Tracker</title>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --bg: #0f0f13; --card: #1a1a24; --accent: #6c5ce7;
+  --danger: #e74c3c; --success: #00b894; --text: #e0e0e0;
+  --muted: #888; --border: #2a2a3a; --radius: 14px;
+}
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+.container { max-width:720px; margin:0 auto; padding:24px 16px; }
+.header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+.logo { font-size:1.6rem; font-weight:800; background:linear-gradient(135deg,#6c5ce7,#a29bfe); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.balance-card { background:var(--card); border-radius:var(--radius); padding:24px 28px; margin-bottom:24px; border:1px solid var(--border); }
+.balance-label { font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.balance-amount { font-size:2.8rem; font-weight:700; }
+.balance-sub { display:flex; gap:24px; margin-top:16px; font-size:0.85rem; }
+.sub-item .label { color:var(--muted); font-size:0.7rem; text-transform:uppercase; }
+.sub-item .value { font-weight:600; font-size:1.1rem; margin-top:2px; }
+.income { color:var(--success); }
+.expense { color:var(--danger); }
+.add-form { background:var(--card); border-radius:var(--radius); padding:20px; margin-bottom:24px; border:1px solid var(--border); display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; }
+.add-form input, .add-form select { background:#0f0f13; border:1px solid var(--border); color:var(--text); padding:10px 14px; border-radius:10px; font-size:0.9rem; outline:none; transition:border .2s; }
+.add-form input:focus, .add-form select:focus { border-color:var(--accent); }
+.add-form input[type="text"] { flex:2; min-width:120px; }
+.add-form input[type="number"] { flex:1; min-width:100px; }
+.add-form select { flex:0 0 auto; }
+.btn { padding:10px 20px; border-radius:10px; border:none; font-weight:600; cursor:pointer; font-size:0.9rem; transition:all .2s; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#5a4bd1; transform:translateY(-1px); }
+.btn-danger { background:var(--danger); color:#fff; }
+.btn-danger:hover { background:#c0392b; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.transactions { background:var(--card); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; }
+.tx-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--border); }
+.tx-title { font-weight:700; font-size:1rem; }
+.tx-list { max-height:360px; overflow-y:auto; }
+.tx-item { display:flex; align-items:center; padding:14px 20px; border-bottom:1px solid var(--border); gap:12px; transition:background .15s; }
+.tx-item:hover { background:rgba(255,255,255,0.02); }
+.tx-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.tx-icon.income { background:rgba(0,184,148,0.15); }
+.tx-icon.expense { background:rgba(231,76,60,0.15); }
+.tx-info { flex:1; min-width:0; }
+.tx-desc { font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tx-cat { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.tx-amount { font-weight:700; font-size:1.05rem; white-space:nowrap; }
+.tx-actions { display:flex; gap:6px; }
+.tx-actions button { background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.85rem; padding:4px 8px; border-radius:6px; transition:all .15s; }
+.tx-actions button:hover { color:var(--danger); background:rgba(231,76,60,0.1); }
+.empty { text-align:center; padding:40px 20px; color:var(--muted); }
+.empty-icon { font-size:3rem; margin-bottom:10px; }
+.chart-section { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.chart-card { background:var(--card); border-radius:var(--radius); padding:20px; border:1px solid var(--border); }
+.chart-title { font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px; }
+.chart-bar-group { display:flex; flex-direction:column; gap:10px; }
+.chart-bar-row { display:flex; align-items:center; gap:10px; }
+.chart-bar-label { width:60px; font-size:0.8rem; color:var(--muted); text-align:right; flex-shrink:0; }
+.chart-bar-track { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+.chart-bar-fill { height:100%; border-radius:4px; transition:width .4s ease; }
+.chart-bar-val { width:55px; font-size:0.8rem; text-align:right; flex-shrink:0; }
+.category-colors { --c-food:#e17055;--c-transport:#00cec9;--c-housing:#6c5ce7;--c-utils:#fdcb6e;--c-entertain:#fd79a8;--c-health:#55efc4;--c-salary:#00b894;--c-freelance:#a29bfe;--c-invest:#ffeaa7;--c-other:#b2bec3; }
+.donate-section { margin-top:32px; background:linear-gradient(135deg,#1a1a24,#2d1b69); border-radius:var(--radius); padding:32px; text-align:center; border:1px solid var(--accent); }
+.donate-title { font-size:1.4rem; font-weight:700; margin-bottom:8px; }
+.donate-sub { color:var(--muted); margin-bottom:24px; font-size:0.95rem; line-height:1.5; }
+.donate-options { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.donate-btn { padding:14px 28px; border-radius:12px; border:none; font-weight:700; font-size:1rem; cursor:pointer; transition:all .2s; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+.donate-btn:hover { transform:translateY(-2px); }
+.donate-kofi { background:#ff5e5b; color:#fff; }
+.donate-bmac { background:#ffdd00; color:#0f0f13; }
+.donate-paypal { background:#0070ba; color:#fff; }
+.footer { text-align:center; padding:24px; color:var(--muted); font-size:0.8rem; }
+@media (max-width:500px) {
+  .chart-section { grid-template-columns:1fr; }
+  .balance-amount { font-size:2.2rem; }
+  .add-form { flex-direction:column; }
+}
+</style>
+</head>
+<body class="category-colors">
+<div class="container">
+  <div class="header">
+    <div class="logo">💰 BucksFlow</div>
+    <button class="btn btn-outline" onclick="clearAll()">🔄 Reset</button>
+  </div>
+
+  <div class="balance-card">
+    <div class="balance-label">Total Balance</div>
+    <div class="balance-amount" id="totalBalance">$0.00</div>
+    <div class="balance-sub">
+      <div class="sub-item">
+        <div class="label">💰 Income</div>
+        <div class="value income" id="totalIncome">$0.00</div>
+      </div>
+      <div class="sub-item">
+        <div class="label">💸 Expenses</div>
+        <div class="value expense" id="totalExpense">$0.00</div>
+      </div>
+    </div>
+  </div>
+
+  <form class="add-form" id="txForm">
+    <input type="text" id="desc" placeholder="Description..." required>
+    <input type="number" id="amount" placeholder="Amount" step="0.01" min="0.01" required>
+    <select id="type" required>
+      <option value="expense">Expense</option>
+      <option value="income">Income</option>
+    </select>
+    <select id="category">
+      <optgroup label="--- Expenses ---">
+        <option value="🍕 Food">🍕 Food</option>
+        <option value="🚗 Transport">🚗 Transport</option>
+        <option value="🏠 Housing">🏠 Housing</option>
+        <option value="⚡ Utilities">⚡ Utilities</option>
+        <option value="🎮 Entertainment">🎮 Entertainment</option>
+        <option value="💊 Health">💊 Health</option>
+      </optgroup>
+      <optgroup label="--- Income ---">
+        <option value="💼 Salary">💼 Salary</option>
+        <option value="🤝 Freelance">🤝 Freelance</option>
+        <option value="📈 Investment">📈 Investment</option>
+      </optgroup>
+      <option value="📦 Other">📦 Other</option>
+    </select>
+    <button type="submit" class="btn btn-primary">+ Add</button>
+  </form>
+
+  <div class="chart-section">
+    <div class="chart-card">
+      <div class="chart-title">📊 Top Expenses</div>
+      <div class="chart-bar-group" id="expenseChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">📈 Income Sources</div>
+      <div class="chart-bar-group" id="incomeChart"></div>
+    </div>
+  </div>
+
+  <div class="transactions">
+    <div class="tx-header">
+      <div class="tx-title">📋 Recent Transactions</div>
+      <span style="font-size:0.8rem;color:var(--muted)" id="txCount">0</span>
+    </div>
+    <div class="tx-list" id="txList">
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div>No transactions yet. Add your first one above!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="donate-section">
+    <div class="donate-title">☕ Enjoying BucksFlow?</div>
+    <div class="donate-sub">
+      If this tool helps you track your money,<br>consider buying me a coffee to keep it free forever.
+    </div>
+    <div class="donate-options">
+      <a href="https://ko-fi.com/YOUR_KOFI" target="_blank" class="donate-btn donate-kofi">
+        ☕ Tip $10 on Ko-fi
+      </a>
+      <a href="https://www.paypal.com/paypalme/YOUR_PAYPAL" target="_blank" class="donate-btn donate-paypal">
+        💳 Send $10 via PayPal
+      </a>
+    </div>
+    <p style="margin-top:16px;font-size:0.75rem;color:var(--muted)">
+      💡 To earn: replace YOUR_KOFI / YOUR_PAYPAL with your real usernames<br>
+      Or deploy now and share the link on Twitter, Reddit, Discord!
+    </p>
+  </div>
+
+  <div class="footer">Made with ❤️ | 2026</div>
+</div>
+
+<script>
+const CAT_COLORS = {
+  '🍕 Food':'#e17055','🚗 Transport':'#00cec9','🏠 Housing':'#6c5ce7',
+  '⚡ Utilities':'#fdcb6e','🎮 Entertainment':'#fd79a8','💊 Health':'#55efc4',
+  '💼 Salary':'#00b894','🤝 Freelance':'#a29bfe','📈 Investment':'#ffeaa7',
+  '📦 Other':'#b2bec3'
+};
+
+function getTxns() {
+  try { return JSON.parse(localStorage.getItem('bucksflow_txns') || '[]'); }
+  catch { return []; }
+}
+function saveTxns(t) { localStorage.setItem('bucksflow_txns',JSON.stringify(t)); }
+
+function addTxn(desc,amount,type,category) {
+  const txns = getTxns();
+  txns.unshift({ id:Date.now(), desc, amount:parseFloat(amount), type, category, date:new Date().toISOString() });
+  saveTxns(txns);
+  renderAll();
+}
+
+function deleteTxn(id) {
+  const txns = getTxns().filter(t => t.id !== id);
+  saveTxns(txns);
+  renderAll();
+}
+
+function renderAll() {
+  const txns = getTxns();
+  let totalInc=0, totalExp=0;
+  const expCat={}, incCat={};
+
+  txns.forEach(t => {
+    if (t.type==='income') { totalInc+=t.amount; incCat[t.category]=(incCat[t.category]||0)+t.amount; }
+    else { totalExp+=t.amount; expCat[t.category]=(expCat[t.category]||0)+t.amount; }
+  });
+
+  document.getElementById('totalBalance').textContent = '$'+(totalInc-totalExp).toFixed(2);
+  document.getElementById('totalIncome').textContent = '$'+totalInc.toFixed(2);
+  document.getElementById('totalExpense').textContent = '$'+totalExp.toFixed(2);
+  document.getElementById('txCount').textContent = txns.length+' txns';
+
+  const txList = document.getElementById('txList');
+  if (txns.length===0) {
+    txList.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div>No transactions yet. Add your first one above!</div></div>';
+  } else {
+    txList.innerHTML = txns.map(t => `
+      <div class="tx-item">
+        <div class="tx-icon ${t.type}">${t.category.split(' ')[0]}</div>
+        <div class="tx-info">
+          <div class="tx-desc">${esc(t.desc)}</div>
+          <div class="tx-cat">${t.category}</div>
+        </div>
+        <div class="tx-amount ${t.type==='income'?'income':'expense'}">
+          ${t.type==='income'?'+':'-'}$${t.amount.toFixed(2)}
+        </div>
+        <div class="tx-actions">
+          <button onclick="deleteTxn(${t.id})" title="Delete">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderChart(elId, catData, total) {
+    const el = document.getElementById(elId);
+    const sorted = Object.entries(catData).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if (sorted.length===0) { el.innerHTML='<div class="empty" style="padding:20px"><div style="font-size:2rem">📊</div><div>No data yet</div></div>'; return; }
+    const max = sorted[0][1];
+    el.innerHTML = sorted.map(([cat,amt]) => `
+      <div class="chart-bar-row">
+        <span class="chart-bar-label">${cat.split(' ')[0]}</span>
+        <div class="chart-bar-track">
+          <div class="chart-bar-fill" style="width:${(amt/max)*100}%;background:${CAT_COLORS[cat]||'#b2bec3'}"></div>
+        </div>
+        <span class="chart-bar-val">$${amt.toFixed(0)}</span>
+      </div>
+    `).join('');
+  }
+  renderChart('expenseChart',expCat,totalExp);
+  renderChart('incomeChart',incCat,totalInc);
+}
+
+function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+document.getElementById('txForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const desc=document.getElementById('desc').value.trim();
+  const amount=document.getElementById('amount').value;
+  const type=document.getElementById('type').value;
+  const category=document.getElementById('category').value;
+  if (!desc||!amount||parseFloat(amount)<=0) return;
+  addTxn(desc,amount,type,category);
+  e.target.reset();
+});
+
+document.getElementById('type').addEventListener('change',function(){
+  const cat=document.getElementById('category');
+  if (this.value==='income') cat.value='💼 Salary';
+  else cat.value='🍕 Food';
+});
+
+function clearAll() { if(confirm('Delete all transactions?')){saveTxns([]);renderAll();} }
+renderAll();
+</script>
+</body>
+</html>
